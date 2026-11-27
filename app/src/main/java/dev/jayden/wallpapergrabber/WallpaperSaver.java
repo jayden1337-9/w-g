@@ -27,7 +27,15 @@ final class WallpaperSaver {
                 return;
             }
 
-            Drawable drawable = android.app.WallpaperManager.getInstance(context).getDrawable(which);
+            android.app.WallpaperManager manager = android.app.WallpaperManager.getInstance(context);
+            Drawable drawable;
+            if (Build.VERSION.SDK_INT >= 34) {
+                drawable = manager.getDrawable(which);
+            } else if (which == android.app.WallpaperManager.FLAG_SYSTEM) {
+                drawable = manager.getDrawable();
+            } else {
+                drawable = null;
+            }
             if (drawable == null) {
                 Toast.makeText(context, "No readable wallpaper image was returned. Live wallpapers may not be exportable.", Toast.LENGTH_LONG).show();
                 return;
